@@ -6012,7 +6012,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 5
   m_Material: {fileID: 6200000, guid: a07da00455bd49d4e889767f02c1349b, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -6059,6 +6059,12 @@ MonoBehaviour:
     m_Bits: 8
   isGrounded: 0
   isWalled: 0
+  moveSpeed: 5
+  jumpForce: 20
+  facing: 1
+  coyoteTimeLimit: 0.5
+  bufferTimeLimit: 0.5
+  wallJumpForce: {x: 10, y: 15}
 --- !u!1 &1128175072
 GameObject:
   m_ObjectHideFlags: 0
