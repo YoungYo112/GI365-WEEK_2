@@ -80,11 +80,11 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
             isWallJumping = false;
             canDoubleJump = false;
 
-            if (isGrounded)
+            if (isGrounded) // ถ้าอยู่บนพื้น
             {
                 isWallSliding = false;
             }
-            else
+            else // ถ้าไม่อยู่บนพื้น
             {
                 isWallSliding = true;
             }
@@ -96,7 +96,7 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
     }
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space)) // ถ้ากด Spacebar
         {
             if (!isWalled)
             {
@@ -136,7 +136,7 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
         }
         else // *** bufferJump
         {
-            if (isGrounded && Time.time < bufferTime + bufferTimeLimit)
+            if (isGrounded && Time.time < bufferTime + bufferTimeLimit) // ถ้าอยู่ที่พื้น และอยู่ในเวลาที่ Buffer ได้
             {
                 bufferTime = 0f;
                 rigid.linearVelocity = new Vector2(rigid.linearVelocityX, jumpForce);
@@ -153,7 +153,8 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
     }
     private void InputVal()
     {
-
+        X_input = Input.GetAxisRaw("Horizontal");
+        Y_input = Input.GetAxisRaw("Vertical");
     }
     private void Move()
     {
