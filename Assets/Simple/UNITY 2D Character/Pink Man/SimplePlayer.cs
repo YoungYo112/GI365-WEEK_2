@@ -24,6 +24,7 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
 
     [Header("Jump")]
     [SerializeField] private float jumpForce = 20f; // แรงกระโดด
+    [SerializeField] private Vector2 wallJumpForce = new Vector2(10f, 15f);
     private bool isJumping = false;
     private bool isWallJumping = false;
     private bool isWallSliding = false;
@@ -34,8 +35,6 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
     [SerializeField] private float bufferTimeLimit = .5f; // ระยะเวลาที่สามารถกดเพื่อกระโดดก่อนถึงพื้นได้
     private float coyoteTime = -10000f; // เวลาที่ยอมให้กดกระโดดกลางอากาศได้
     private float bufferTime = -10000f; // เวลาที่ยอมให้กดกระโดดกลางอากาศได้
-
-    [SerializeField] private Vector2 wallJumpForce = new Vector2(10f, 15f);
 
 
     private void Awake() // ทำงานก่อนเข้ามาใน game
@@ -109,8 +108,8 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
                 {
                     if (rigid.linearVelocityY > 0f && canDoubleJump) // *** doubleJump
                     {
-                        canDoubleJump = false;
-                        rigid.linearVelocity = new Vector2(rigid.linearVelocityX, jumpForce);
+                        canDoubleJump = false; // DoubleJump ซ้ำไม่ได้
+                        rigid.linearVelocity = new Vector2(rigid.linearVelocityX, jumpForce); // โดด
                     }
 
                     if (rigid.linearVelocityY <= 0f)
@@ -118,11 +117,11 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
                         if (Time.time < coyoteTime + coyoteTimeLimit) // *** coyoteJump
                         {
                             coyoteTime = 0f;
-                            rigid.linearVelocity = new Vector2(rigid.linearVelocityX, jumpForce);
+                            rigid.linearVelocity = new Vector2(rigid.linearVelocityX, jumpForce); // โดด
                         }
                         else // เริ่มนับ bufferJump
                         {
-                            bufferTime = Time.time;
+                            bufferTime = Time.time; // เริ่มจับ buffertime
                         }
                     }
                 }
@@ -139,17 +138,17 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
             if (isGrounded && Time.time < bufferTime + bufferTimeLimit) // ถ้าอยู่ที่พื้น และอยู่ในเวลาที่ Buffer ได้
             {
                 bufferTime = 0f;
-                rigid.linearVelocity = new Vector2(rigid.linearVelocityX, jumpForce);
+                rigid.linearVelocity = new Vector2(rigid.linearVelocityX, jumpForce); // BufferJump
             }
         }
     }
     private void WallSlide()
     {
         if (!isWalled || isGrounded || isWallJumping || rigid.linearVelocityY > 0f)
-            return;
+            return; // ข้ามบรรทัดที่เหลือ
 
-        float Y_slide = Y_input < 0f ? 1f : .5f;
-        rigid.linearVelocity = new Vector2(X_input * moveSpeed, rigid.linearVelocityY * Y_slide);
+        float Y_slide = Y_input < 0f ? 1f : .5f; // ถ้ากดเป็นลงจะลงเร็ว
+        rigid.linearVelocity = new Vector2(X_input * moveSpeed, rigid.linearVelocityY * Y_slide); // ตกช้าลง
     }
     private void InputVal()
     {
@@ -158,14 +157,14 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
     }
     private void Move()
     {
-        if (isWallJumping || isWallSliding)
-            return;
+        if (isWallJumping || isWallSliding) // ถ้า wallJump อยู่ ให้ออกจากการควบคุมจาก plyer
+            return; // มันจะไม่อ่านบรรทัดที่เหลือ
 
-        if (isGrounded)
+        if (isGrounded) // ถ้าอยู่บนพื้น
         {
             rigid.linearVelocity = new Vector2(X_input * moveSpeed, rigid.linearVelocityY);
         }
-        else
+        else // ถ้าลอยกลางอากาศ
         {
             float X_airMove = X_input != 0f ? X_input * moveSpeed : rigid.linearVelocityX;
             rigid.linearVelocity = new Vector2(X_airMove, rigid.linearVelocityY);
