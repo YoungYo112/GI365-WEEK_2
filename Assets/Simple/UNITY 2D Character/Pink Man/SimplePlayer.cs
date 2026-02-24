@@ -8,6 +8,8 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
 {
     private Rigidbody2D rigid; // สำหรับการเคลื่อนที่
     private Animator anim; // สำหรับ animation
+    private ParticleSystem grassPar; // Paticle หญ้า
+    private ParticleSystem.EmissionModule emission; // การสั่งจำนวนของ paticel
 
     [Header("Ground And Wall Check")]
     [SerializeField] private float groundDistCheck = 1f; // ระยะ sensor ที่วิ่งไปชนพื้น
@@ -41,7 +43,10 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
     {
         rigid = GetComponent<Rigidbody2D>(); // มันอยู่ที่ gameobject นี้
         anim = GetComponentInChildren<Animator>(); // ใช้ InChildren เพราะ Animator อยู่ที่ลูก
+        grassPar = GetComponentInChildren<ParticleSystem>(); // เอา Particle จากลูก
+        emission = grassPar.emission; // ดึงข้อมูล emission
     }
+
     private void Update() // ทำงานทุก frame
     {
         JumpState(); // ตรวจสถานะว่า อยู่บนพื้น กำลังกระโดด กำลังลงพื้น หรือ wallSlide
@@ -197,6 +202,9 @@ public class SimplePlayer : MonoBehaviour // library สำหรับตอน gameplay
     }
     private void Animation()
     {
+        anim.SetFloat("velx", rigid.linearVelocityX); // จะ idle หรือ run
+        anim.SetFloat("vely", rigid.linearVelocityY); // จะโดดขึ้นหรือลง
 
+        emission.enabled = isGrounded;
     }
 }
